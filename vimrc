@@ -9,19 +9,16 @@ endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 set shell=/bin/bash
 
-"let javascript_enable_domhtmlcss=1
-"let g:ackprg = 'ag --nogroup --nocolor --column'
-
 " let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-" original repos on github
 "Bundle 'tpope/vim-surround'
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/unite.vim'
 
 NeoBundle 'mattn/emmet-vim', "{{{
   let g:user_emmet_install_global = 0
+  let g:user_emmet_mode='n'
   let g:user_emmet_leader_key='<C-e>'
   autocmd FileType html,hbs EmmetInstall
 "}}}
@@ -46,6 +43,7 @@ NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
   let g:ctrlp_switch_buffer = 'et'    " jump to a file if it's open already
   let g:ctrlp_cache_dir='~/.vim/.cache/ctrlp'
   let g:ctrlp_reuse_window='startify'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
   let g:ctrlp_extensions=['funky']
   let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|bin'
 
@@ -75,12 +73,18 @@ NeoBundle 'mhinz/vim-startify', "{{{
   nnoremap <F1> :Startify<cr>
 "}}}
 
+NeoBundle 'mileszs/ack.vim', "{{{
+  let g:ackprg='ag --nogroup --nocolor --column'
+"}}}
+
+NeoBundle 'bling/vim-airline'
+
+
 " Bundle 'nathanaelkane/vim-indent-guides'
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Bundle 'Lokaltog/vim-easymotion'
 " Bundle 'scrooloose/nerdcommenter'
 " Bundle 'matchit.zip'
-" Bundle 'mileszs/ack.vim'
 " vim-scripts repos
 "Bundle 'L9'
 "Bundle 'FuzzyFinder'

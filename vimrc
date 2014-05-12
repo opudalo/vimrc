@@ -9,6 +9,8 @@ endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 set shell=/bin/bash
 
+set switchbuf=useopen,usetab
+
 " let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -18,7 +20,6 @@ NeoBundle 'Shougo/unite.vim'
 
 NeoBundle 'mattn/emmet-vim', "{{{
   let g:user_emmet_install_global = 0
-  let g:user_emmet_mode='n'
   let g:user_emmet_leader_key='<C-e>'
   autocmd FileType html,hbs EmmetInstall
 "}}}
@@ -116,6 +117,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
+autocmd FileType html,hbs,styl setlocal tabstop=4 shiftwidth=4 softtabstop=4
 set autoindent
 
 "vertical/horizontal scroll off settings

@@ -18,11 +18,77 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/unite.vim'
 
+NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'mattn/emmet-vim', "{{{
   let g:user_emmet_install_global = 0
   let g:user_emmet_leader_key='<C-e>'
   autocmd FileType html,hbs EmmetInstall
 "}}}
+
+NeoBundle 'Shougo/neocomplete' "{{{
+  "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+  "Disable AutoComplPop.
+  let g:acp_enableAtStartup = 0
+  " Use neocomplcache.
+  let g:neocomplcache_enable_at_startup = 1
+  " Use smartcase.
+  let g:neocomplcache_enable_smart_case = 1
+  " Set minimum syntax keyword length.
+  let g:neocomplcache_min_syntax_length = 3
+  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+  " Enable heavy features.
+  " Use camel case completion.
+  "let g:neocomplcache_enable_camel_case_completion = 1
+  " Use underbar completion.
+  "let g:neocomplcache_enable_underbar_completion = 1
+
+  " Define dictionary.
+  let g:neocomplcache_dictionary_filetype_lists = {
+        \ 'default' : '',
+        \ 'vimshell' : $HOME.'/.vimshell_hist',
+        \ 'scheme' : $HOME.'/.gosh_completions'
+          \ }
+
+  " Define keyword.
+  if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+  endif
+  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+  " Plugin key-mappings.
+  inoremap <expr><C-g> neocomplcache#undo_completion()
+  inoremap <expr><C-l> neocomplcache#complete_common_string()
+
+  " Recommended key-mappings.
+  " <CR>: close popup and save indent.
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return neocomplcache#smart_close_popup() . "\<CR>"
+    " For no inserting <CR> key.
+    "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+  endfunction
+  " <TAB>: completion.
+  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+  " <C-h>, <BS>: close popup and delete backword char.
+  inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+  inoremap <expr><C-y> neocomplcache#close_popup()
+  inoremap <expr><C-e> neocomplcache#cancel_popup()
+  " Close popup by <Space>.
+  "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+"}}}
+
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 
 NeoBundle 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
   let NERDTreeShowHidden=0
@@ -34,6 +100,19 @@ NeoBundle 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERD
   let NERDTreeBookmarksFile='~/.vim/.cache/NERDTreeBookmarks'
   nnoremap <Leader>p :NERDTreeToggle<CR>
 "}}}
+
+NeoBundle 'mxw/vim-jsx'
+NeoBundle "othree/html5.vim"
+"NeoBundle "jelera/vim-javascript-syntax", {'autoload':{'filetypes':['javascript']}}
+NeoBundle "nathanaelkane/vim-indent-guides"
+NeoBundle "scrooloose/syntastic" "{{{
+  let g:syntastic_mode_map={ 'mode': 'active',
+    \ 'active_filetypes': [],
+    \ 'passive_filetypes': ['html'] }
+  let g:syntastic_javascript_checkers = ['jsxhint']
+"}}}
+NeoBundle "Valloric/YouCompleteMe"
+NeoBundle "marijnh/tern_for_vim"
 
 NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
   let g:ctrlp_clear_cache_on_exit=1
@@ -59,9 +138,13 @@ NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
 
 "}}}
 
-NeoBundle 'pangloss/vim-javascript', "{{{
-  let javascript_enable_domhtmlcss=1
+NeoBundle 'Shutnik/jshint2.vim' "{{{
+  let jshint2_command = '/Users/zheneva/.nvm/v0.10.26/bin/jsxhint'
+  let jshint2_save = 1
+  let jshint2_confirm = 0 
 "}}}
+
+NeoBundle 'pangloss/vim-javascript'
 
 NeoBundle 'wavded/vim-stylus', "{{{
   autocmd BufNewFile,BufRead *.styl set filetype=stylus
@@ -113,13 +196,13 @@ set guioptions-=L
 set guioptions-=r
 
 "indent settings
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set autoindent
-autocmd FileType javascript setlocal|tabstop=2|shiftwidth=2|softtabstop=2
-
+set smartindent
+autocmd BufRead,BufNewFile *.js setlocal tabstop=2 shiftwidth=2 softtabstop=2
 "vertical/horizontal scroll off settings
 set scrolloff=3
 set sidescrolloff=7

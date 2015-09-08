@@ -54,6 +54,27 @@ NeoBundle 'Shougo/vimshell.vim' "{{{
   let g:unite_source_vimshell_external_history_path = $HOME.'/zsh_history'
 "}}}
 
+NeoBundle 'junegunn/goyo.vim' "{{{
+  autocmd User GoyoEnter Limelight
+  autocmd User GoyoLeave Limelight!
+"}}}
+
+NeoBundle 'junegunn/limelight.vim' "{{{
+  " Color name (:help cterm-colors) or ANSI code
+  let g:limelight_conceal_ctermfg = 'gray'
+  let g:limelight_conceal_ctermfg = 240
+
+  " Color name (:help gui-colors) or RGB color
+  let g:limelight_conceal_guifg = 'DarkGray'
+  let g:limelight_conceal_guifg = '#777777'
+
+  " Default: 0.5
+  let g:limelight_default_coefficient = 0.5
+
+  " Number of preceding/following paragraphs to include (default: 0)
+  let g:limelight_paragraph_span = 0
+"}}}
+
 NeoBundle 'Shougo/neocomplete' "{{{
   "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
   "Disable AutoComplPop.
@@ -69,7 +90,7 @@ NeoBundle 'Shougo/neocomplete' "{{{
   let g:neocomplete#auto_completion_start_length = 1
   let g:neocomplete#data_directory = $HOME.'/.vim/cache/neocompl'
   let g:neocomplete#min_keyword_length = 4
-  
+
   " <TAB>: completion.
   inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
@@ -88,6 +109,8 @@ NeoBundle 'Shougo/neocomplete' "{{{
 
  
 "}}}
+
+NeoBundle 'tpope/vim-commentary'
 
 NeoBundle 'Shougo/neosnippet' "{{{
   " Plugin key-mappings.
@@ -119,6 +142,13 @@ NeoBundle 'pangloss/vim-javascript' "{{{
   endfun
 
   autocmd FileType c,cpp,java,javascript,ruby,python,vimscript autocmd BufWritePre <buffer> :call TrailSpaces()
+"}}}
+NeoBundle 'mxw/vim-jsx'
+
+NeoBundle 'mattn/emmet-vim', "{{{
+  let g:user_emmet_install_global = 0
+  let g:user_emmet_leader_key='<C-e>'
+  autocmd FileType html,hbs EmmetInstall
 "}}}
 
 NeoBundle 'mileszs/ack.vim', "{{{
@@ -258,7 +288,6 @@ NeoBundleCheck
 " Legacy plugins
 " ==============
 "
-"NeoBundle 'mxw/vim-jsx'
 "NeoBundle "jelera/vim-javascript-syntax", {'autoload':{'filetypes':['javascript']}}
 "NeoBundle "nathanaelkane/vim-indent-guides"
 "NeoBundle "scrooloose/syntastic" "{{{
@@ -282,11 +311,7 @@ NeoBundleCheck
 
 ""Bundle 'tpope/vim-surround'
 "NeoBundle 'tpope/vim-fugitive'
-"NeoBundle 'mattn/emmet-vim', "{{{
-"  let g:user_emmet_install_global = 0
-"  let g:user_emmet_leader_key='<C-e>'
-"  autocmd FileType html,hbs EmmetInstall
-""}}}
+
 "NeoBundle "Valloric/YouCompleteMe" "{{{
 "  let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
 "  let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
@@ -300,46 +325,58 @@ NeoBundleCheck
 
 " ColorSchemes legacy
 " ===================
-"
-"if has("gui_running")
-"  "tell the term has 256 colors
-"  set t_Co=256
-"
-"  colorscheme desert 
-"  set guitablabel=%M%t
-"  set lines=40
-"  set columns=115
-"
-"  if has("gui_gnome")
-"    set term=gnome-256color
-"    colorscheme desert 
-"    set guifont=Monospace\ Bold\ 12
-"  endif
-"
-"  if has("gui_mac") || has("gui_macvim")
-"    set guifont=Menlo:h14
-"    set invmmta
-"    macmenu &File.New\ Tab key=<nop>
-"    macmenu &File.Save key=<nop>
-"    macmenu &File.Open\.\.\. key=<nop>
-"  endif
-"
-"  if has("gui_win32") || has("gui_win32s")
-"    set guifont=Consolas:h12
-"    set enc=utf-8
-"  endif
-"else
-"  "dont load csapprox if there is no gui support - silences an annoying warning
-"  let g:CSApprox_loaded = 1
-"
-"  "set railscasts colorscheme when running vim in gnome terminal
-"  if $COLORTERM == 'gnome-terminal'
-"    set term=gnome-256color
-"    colorscheme railscasts
-"  else
-"    colorscheme default
-"  endif
-"endif
+
+if has("gui_running")
+  set antialias
+  "tell the term has 256 colors
+  set t_Co=256
+
+  colorscheme desert 
+  set guitablabel=%M%t
+  set lines=40
+  set columns=115
+
+  if has("gui_gnome")
+    set term=gnome-256color
+    colorscheme desert 
+    set guifont=Monospace\ Bold\ 12
+  endif
+
+  if has("gui_mac") || has("gui_macvim")
+    " set guifont=Menlo:h13
+    " set guifont=Skyhook\ Mono:h16
+    " set guifont=M+\ 1m\ regular:h14
+    " set guifont=Input\ Mono:h13
+    " set guifont=DejaVu\ Sans\ Mono:h14
+    " set guifont=Monaco:h13
+    " set guifont=Envy\ Code\ R\ for\ Powerline:h13
+    set guifont=Inconsolata:h13
+    " set guifont=Pragmata\ TT:h14
+    " set guifont=Dark\ Courier:h16
+    " set guifont=Cousine:h14
+
+    set invmmta
+    macmenu &File.New\ Tab key=<nop>
+    macmenu &File.Save key=<nop>
+    macmenu &File.Open\.\.\. key=<nop>
+  endif
+
+  if has("gui_win32") || has("gui_win32s")
+    set guifont=Consolas:h12
+    set enc=utf-8
+  endif
+else
+  "dont load csapprox if there is no gui support - silences an annoying warning
+  let g:CSApprox_loaded = 1
+
+  "set railscasts colorscheme when running vim in gnome terminal
+  if $COLORTERM == 'gnome-terminal'
+    set term=gnome-256color
+    colorscheme railscasts
+  else
+    colorscheme default
+  endif
+endif
 "
 
 " NeoComplete Configuration

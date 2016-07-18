@@ -96,6 +96,7 @@ NeoBundle 'Shougo/neocomplete' "{{{
 
   " Enable omni completion.
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
   autocmd FileType javascript setlocal omnifunc=tern#Complete
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -132,7 +133,13 @@ NeoBundle 'Shougo/neosnippet-snippets' "{{{
     set conceallevel=2 concealcursor=i
   endif
 "}}}
-NeoBundle "marijnh/tern_for_vim"
+
+NeoBundle 'majutsushi/tagbar' "{{{
+  nmap <F9> :TagbarToggle<CR>
+"}}}
+
+NeoBundle 'marijnh/tern_for_vim'
+
 NeoBundle 'pangloss/vim-javascript' "{{{
   func! TrailSpaces()
     let l = line(".")
@@ -143,13 +150,30 @@ NeoBundle 'pangloss/vim-javascript' "{{{
 
   autocmd FileType c,cpp,java,javascript,ruby,python,vimscript autocmd BufWritePre <buffer> :call TrailSpaces()
 "}}}
-NeoBundle 'mxw/vim-jsx'
+
+NeoBundle "scrooloose/syntastic" "{{{
+  let g:syntastic_mode_map={ 'mode': 'active',
+    \ 'active_filetypes': [],
+    \ 'passive_filetypes': ['html'] }
+  let g:syntastic_javascript_checkers = ['eslint']
+
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_javascript_eslint_exec = 'eslint_d'
+"}}}
+
+NeoBundle 'mxw/vim-jsx' "{{{
+  let g:jsx_ext_required = 0
+"}}}
+
+NeoBundle 'HerringtonDarkholme/yats.vim'
 
 NeoBundle 'mattn/emmet-vim', "{{{
   let g:user_emmet_install_global = 0
   let g:user_emmet_leader_key='<C-e>'
   autocmd FileType html,hbs EmmetInstall
 "}}}
+
+NeoBundle 'tpope/vim-surround'
 
 NeoBundle 'mileszs/ack.vim', "{{{
   let g:ackprg='ag --nogroup --nocolor --column'
@@ -185,7 +209,6 @@ NeoBundle 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERD
   let NERDTreeChDirMode=0
   let NERDTreeShowBookmarks=0
   let NERDTreeIgnore=['\.git','\.hg']
-  let NERDTreeBookmarksFile='~/.vim/.cache/NERDTreeBookmarks'
   nnoremap <Leader>p :NERDTreeToggle<CR>
 "}}}
 
@@ -202,6 +225,9 @@ NeoBundle 'twe4ked/vim-colorscheme-switcher' "{{{
 "}}}
 
 NeoBundle "othree/html5.vim"
+
+NeoBundle "derekwyatt/vim-scala"
+
 NeoBundle 'wavded/vim-stylus', "{{{
   autocmd BufNewFile,BufRead *.styl set filetype=stylus
 "}}}
@@ -290,12 +316,6 @@ NeoBundleCheck
 "
 "NeoBundle "jelera/vim-javascript-syntax", {'autoload':{'filetypes':['javascript']}}
 "NeoBundle "nathanaelkane/vim-indent-guides"
-"NeoBundle "scrooloose/syntastic" "{{{
-"  let g:syntastic_mode_map={ 'mode': 'active',
-"    \ 'active_filetypes': [],
-"    \ 'passive_filetypes': ['html'] }
-"  let g:syntastic_javascript_checkers = ['eslint']
-""}}}
 "NeoBundle "honza/vim-snippets"
 "NeoBundle "SirVer/ultisnips" "{{{
 "  " Trigger configuration. Do not use <tab> if you use
@@ -309,19 +329,7 @@ NeoBundleCheck
 " Bundle 'scrooloose/nerdcommenter'
 " Bundle 'matchit.zip'
 
-""Bundle 'tpope/vim-surround'
 "NeoBundle 'tpope/vim-fugitive'
-
-"NeoBundle "Valloric/YouCompleteMe" "{{{
-"  let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
-"  let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-""}}}
-
-"NeoBundle 'Shutnik/jshint2.vim' "{{{
-"  let jshint2_command = '/Users/zheneva/.nvm/v0.10.26/bin/eslint'
-"  let jshint2_save = 1
-"  let jshint2_confirm = 0 
-""}}}
 
 " ColorSchemes legacy
 " ===================
@@ -335,6 +343,10 @@ if has("gui_running")
   set guitablabel=%M%t
   set lines=40
   set columns=115
+  
+  "Vertical Split separator
+  hi vertsplit gui=none guibg=grey22 
+
 
   if has("gui_gnome")
     set term=gnome-256color
@@ -350,12 +362,15 @@ if has("gui_running")
     " set guifont=DejaVu\ Sans\ Mono:h14
     " set guifont=Monaco:h13
     " set guifont=Envy\ Code\ R\ for\ Powerline:h13
-    set guifont=Inconsolata:h13
+    " set guifont=Inconsolata:h13
+    set guifont=Source\ Code\ Pro\ Light:h13
     " set guifont=Pragmata\ TT:h14
     " set guifont=Dark\ Courier:h16
     " set guifont=Cousine:h14
 
     set invmmta
+    set fuoptions=maxvert,maxhorz
+
     macmenu &File.New\ Tab key=<nop>
     macmenu &File.Save key=<nop>
     macmenu &File.Open\.\.\. key=<nop>
@@ -377,6 +392,8 @@ else
     colorscheme default
   endif
 endif
+
+set fillchars-=vert:\|
 "
 
 " NeoComplete Configuration

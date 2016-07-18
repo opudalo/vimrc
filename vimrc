@@ -1,31 +1,36 @@
-syntax on
-
-if has('vim_starting')
-  set nocompatible
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+if &compatible
+  set nocompatible               " Be iMproved
 endif
 
 set shell=/bin/bash
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-let g:neobundle_default_git_protocol = "git"
-set switchbuf=useopen,usetab
+" dein.vim pre-config
+set runtimepath^=./repos/github.com/Shougo/dein.vim
+call dein#begin(expand('.'))
+call dein#add('Shougo/dein.vim')
 
-" let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
+" Add or remove your plugins here:
 
-NeoBundle 'Shougo/vimproc.vim', {
-\ 'build' : {
-\     'windows' : 'tools\\update-dll-mingw',
-\     'cygwin' : 'make -f make_cygwin.mak',
-\     'mac' : 'make -f make_mac.mak',
-\     'linux' : 'make',
-\     'unix' : 'gmake',
-\    },
-\ }
+call dein#add('Shougo/vimproc.vim', { 'build': 'make' })
 
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Lokaltog/vim-easymotion' "{{{
+call dein#add('scrooloose/nerdtree')
+call dein#config({
+\   'autoload': {
+\     'commands': ['NERDTreeToggle','NERDTreeFind']
+\   }
+\ }) "{{{
+  let NERDTreeShowHidden=0
+  let NERDTreeQuitOnOpen=0
+  let NERDTreeShowLineNumbers=1
+  let NERDTreeChDirMode=0
+  let NERDTreeShowBookmarks=0
+  let NERDTreeIgnore=['\.git','\.hg']
+  nnoremap <Leader>p :NERDTreeToggle<CR>
+"}}}
+
+call dein#add('Shougo/unite.vim')
+
+call dein#add('Lokaltog/vim-easymotion') "{{{
   let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
   " Bi-directional find motion
@@ -50,32 +55,7 @@ NeoBundle 'Lokaltog/vim-easymotion' "{{{
   map  N <Plug>(easymotion-prev)
 "}}}
 
-NeoBundle 'Shougo/vimshell.vim' "{{{
-  let g:unite_source_vimshell_external_history_path = $HOME.'/zsh_history'
-"}}}
-
-NeoBundle 'junegunn/goyo.vim' "{{{
-  autocmd User GoyoEnter Limelight
-  autocmd User GoyoLeave Limelight!
-"}}}
-
-NeoBundle 'junegunn/limelight.vim' "{{{
-  " Color name (:help cterm-colors) or ANSI code
-  let g:limelight_conceal_ctermfg = 'gray'
-  let g:limelight_conceal_ctermfg = 240
-
-  " Color name (:help gui-colors) or RGB color
-  let g:limelight_conceal_guifg = 'DarkGray'
-  let g:limelight_conceal_guifg = '#777777'
-
-  " Default: 0.5
-  let g:limelight_default_coefficient = 0.5
-
-  " Number of preceding/following paragraphs to include (default: 0)
-  let g:limelight_paragraph_span = 0
-"}}}
-
-NeoBundle 'Shougo/neocomplete' "{{{
+call dein#add('Shougo/neocomplete') "{{{
   "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
   "Disable AutoComplPop.
   let g:acp_enableAtStartup = 0
@@ -107,40 +87,11 @@ NeoBundle 'Shougo/neocomplete' "{{{
       let g:neocomplete#keyword_patterns = {}
   endif
   let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
- 
 "}}}
 
-NeoBundle 'tpope/vim-commentary'
+call dein#add('marijnh/tern_for_vim')
 
-NeoBundle 'Shougo/neosnippet' "{{{
-  " Plugin key-mappings.
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
-  " SuperTab like snippets behavior.
-  imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-    \ "\<Plug>(neosnippet_expand_or_jump)"
-    \: pumvisible() ? "\<C-n>" : "\<TAB>"
-  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-    \ "\<Plug>(neosnippet_expand_or_jump)"
-    \: "\<TAB>"
-"}}}
-
-NeoBundle 'Shougo/context_filetype.vim'
-NeoBundle 'Shougo/neosnippet-snippets' "{{{
-  if has('conceal')
-    set conceallevel=2 concealcursor=i
-  endif
-"}}}
-
-NeoBundle 'majutsushi/tagbar' "{{{
-  nmap <F9> :TagbarToggle<CR>
-"}}}
-
-NeoBundle 'marijnh/tern_for_vim'
-
-NeoBundle 'pangloss/vim-javascript' "{{{
+call dein#add('pangloss/vim-javascript') "{{{
   func! TrailSpaces()
     let l = line(".")
     let c = col(".")
@@ -151,7 +102,7 @@ NeoBundle 'pangloss/vim-javascript' "{{{
   autocmd FileType c,cpp,java,javascript,ruby,python,vimscript autocmd BufWritePre <buffer> :call TrailSpaces()
 "}}}
 
-NeoBundle "scrooloose/syntastic" "{{{
+call dein#add('scrooloose/syntastic') "{{{
   let g:syntastic_mode_map={ 'mode': 'active',
     \ 'active_filetypes': [],
     \ 'passive_filetypes': ['html'] }
@@ -161,25 +112,15 @@ NeoBundle "scrooloose/syntastic" "{{{
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
 "}}}
 
-NeoBundle 'mxw/vim-jsx' "{{{
+call dein#add('mxw/vim-jsx') "{{{
   let g:jsx_ext_required = 0
 "}}}
 
-NeoBundle 'HerringtonDarkholme/yats.vim'
-
-NeoBundle 'mattn/emmet-vim', "{{{
-  let g:user_emmet_install_global = 0
-  let g:user_emmet_leader_key='<C-e>'
-  autocmd FileType html,hbs EmmetInstall
-"}}}
-
-NeoBundle 'tpope/vim-surround'
-
-NeoBundle 'mileszs/ack.vim', "{{{
+call dein#add('mileszs/ack.vim') "{{{
   let g:ackprg='ag --nogroup --nocolor --column'
 "}}}
 
-NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
+call dein#add('kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' }) "{{{
   let g:ctrlp_clear_cache_on_exit=1
   let g:ctrlp_max_height=10
   let g:ctrlp_show_hidden=0
@@ -202,34 +143,31 @@ NeoBundle 'kien/ctrlp.vim', { 'depends': 'tacahiroy/ctrlp-funky' } "{{{
   nnoremap [ctrlp]b :CtrlPBuffer<cr>
 "}}}
 
-NeoBundle 'scrooloose/nerdtree', {'autoload':{'commands':['NERDTreeToggle','NERDTreeFind']}} "{{{
-  let NERDTreeShowHidden=0
-  let NERDTreeQuitOnOpen=0
-  let NERDTreeShowLineNumbers=1
-  let NERDTreeChDirMode=0
-  let NERDTreeShowBookmarks=0
-  let NERDTreeIgnore=['\.git','\.hg']
-  nnoremap <Leader>p :NERDTreeToggle<CR>
-"}}}
-
-NeoBundle 'mhinz/vim-startify', "{{{
+call dein#add('mhinz/vim-startify') "{{{
   let g:startify_session_dir = '~/.vim/.cache/sessions'
   let g:startify_change_to_vcs_root = 1
   let g:startify_show_sessions = 1
   nnoremap <F1> :Startify<cr>
 "}}}
-NeoBundle 'bling/vim-airline'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'twe4ked/vim-colorscheme-switcher' "{{{
+
+call dein#add('bling/vim-airline')
+call dein#add('flazz/vim-colorschemes')
+call dein#add('twe4ked/vim-colorscheme-switcher') "{{{
   autocmd VimEnter * :silent! SetColors all
 "}}}
 
-NeoBundle "othree/html5.vim"
-
-NeoBundle "derekwyatt/vim-scala"
-
-NeoBundle 'wavded/vim-stylus', "{{{
+call dein#add('wavded/vim-stylus') "{{{
   autocmd BufNewFile,BufRead *.styl set filetype=stylus
+"}}}
+
+
+"{{{ dein.vim post-config
+call dein#end()
+filetype plugin indent on
+
+if dein#check_install()
+  call dein#install()
+endif
 "}}}
 
 "store lots of :cmdline history
@@ -305,11 +243,6 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 "Reload vimrc
 nnoremap <leader>rv :source $MYVIMRC<cr>
 
-call neobundle#end()
-
-filetype plugin indent on
-syntax enable
-NeoBundleCheck
 
 " Legacy plugins
 " ==============
@@ -328,8 +261,34 @@ NeoBundleCheck
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Bundle 'scrooloose/nerdcommenter'
 " Bundle 'matchit.zip'
-
-"NeoBundle 'tpope/vim-fugitive'
+"
+" NeoBundle 'marijnh/tern_for_vim'
+" 
+" NeoBundle 'pangloss/vim-javascript' "{{{
+"   func! TrailSpaces()
+"     let l = line(".")
+"     let c = col(".")
+"     %s/\s\+$//e
+"     call cursor(l, c)
+"   endfun
+" 
+"   autocmd FileType c,cpp,java,javascript,ruby,python,vimscript autocmd BufWritePre <buffer> :call TrailSpaces()
+" "}}}
+" 
+" NeoBundle "scrooloose/syntastic" "{{{
+"   let g:syntastic_mode_map={ 'mode': 'active',
+"     \ 'active_filetypes': [],
+"     \ 'passive_filetypes': ['html'] }
+"   let g:syntastic_javascript_checkers = ['eslint']
+" 
+"   let g:syntastic_always_populate_loc_list = 1
+"   let g:syntastic_javascript_eslint_exec = 'eslint_d'
+" "}}}
+" 
+" NeoBundle 'mxw/vim-jsx' "{{{
+"   let g:jsx_ext_required = 0
+" "}}}
+" NeoBundle 'tpope/vim-fugitive'
 
 " ColorSchemes legacy
 " ===================
@@ -346,13 +305,6 @@ if has("gui_running")
   
   "Vertical Split separator
   hi vertsplit gui=none guibg=grey22 
-
-
-  if has("gui_gnome")
-    set term=gnome-256color
-    colorscheme desert 
-    set guifont=Monospace\ Bold\ 12
-  endif
 
   if has("gui_mac") || has("gui_macvim")
     " set guifont=Menlo:h13
@@ -383,64 +335,7 @@ if has("gui_running")
 else
   "dont load csapprox if there is no gui support - silences an annoying warning
   let g:CSApprox_loaded = 1
-
-  "set railscasts colorscheme when running vim in gnome terminal
-  if $COLORTERM == 'gnome-terminal'
-    set term=gnome-256color
-    colorscheme railscasts
-  else
-    colorscheme default
-  endif
+  colorscheme desert
 endif
 
 set fillchars-=vert:\|
-"
-
-" NeoComplete Configuration
-" =========================
-" Enable heavy omni completion.
-"if !exists('g:neocomplete#sources#omni#input_patterns')
-"  let g:neocomplete#sources#omni#input_patterns = {}
-"endif
-"if !exists('g:neocomplete#force_omni_input_patterns')
-"  let g:neocomplete#force_omni_input_patterns = {}
-"endif
-"let g:neocomplete#sources#omni#input_patterns.javascript = '[^. \t]\.\w*'
-"let g:neocomplete#force_omni_input_patterns.javascript = '[^. \t]\.\w*'
-"let g:neocomplete#force_omni_input_patterns.javascript = '\h\w*\|[^. \t]\.\w*'
-"  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-"
-"  " Define dictionary.
-"  let g:neocomplete#sources#dictionary#dictionaries = {
-"        \ 'default' : '',
-"        \ 'vimshell' : $HOME.'/.vimshell_hist',
-"        \ 'scheme' : $HOME.'/.gosh_completions'
-"          \ }
-"
-"  " Define keyword.
-"  if !exists('g:neocomplete#keyword_patterns')
-"    let g:neocomplete#keyword_patterns = {}
-"  endif
-"  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-"
-"  " Plugin key-mappings.
-"  inoremap <expr><C-g>     neocomplete#undo_completion()
-"  inoremap <expr><C-l>     neocomplete#complete_common_string()
-"  "let g:neocomplete#enable_cursor_hold_i = 1
-"  " Recommended key-mappings.
-"  " <CR>: close popup and save indent.
-"  "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-"  "function! s:my_cr_function()
-"  "  return neocomplete#close_popup()
-"  "  " For no inserting <CR> key.
-"  "  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-"  "endfunction
-"  " <C-h>, <BS>: close popup and delete backword char.
-"  inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-"  inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"  inoremap <expr><C-y>  neocomplete#close_popup()
-"  inoremap <expr><C-e>  neocomplete#cancel_popup()
-"  " Close popup by <Space>.
-"  "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-"
-""}}}

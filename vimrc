@@ -5,8 +5,8 @@ endif
 set shell=/bin/bash
 
 " dein.vim pre-config
-set runtimepath^=./repos/github.com/Shougo/dein.vim
-call dein#begin(expand('.'))
+set runtimepath^=~/.vim/repos/github.com/Shougo/dein.vim
+call dein#begin(expand('~/.vim'))
 call dein#add('Shougo/dein.vim')
 
 " Add or remove your plugins here:
@@ -91,6 +91,10 @@ call dein#add('Shougo/neocomplete') "{{{
 
 call dein#add('marijnh/tern_for_vim')
 
+call dein#add('leafgarland/typescript-vim')
+
+call dein#add('Quramy/tsuquyomi')
+
 call dein#add('pangloss/vim-javascript') "{{{
   func! TrailSpaces()
     let l = line(".")
@@ -114,6 +118,10 @@ call dein#add('scrooloose/syntastic') "{{{
 
 call dein#add('mxw/vim-jsx') "{{{
   let g:jsx_ext_required = 0
+"}}}
+
+call dein#add('wavded/vim-stylus') "{{{
+  autocmd BufNewFile,BufRead *.styl set filetype=stylus
 "}}}
 
 call dein#add('mileszs/ack.vim') "{{{
@@ -156,10 +164,7 @@ call dein#add('twe4ked/vim-colorscheme-switcher') "{{{
   autocmd VimEnter * :silent! SetColors all
 "}}}
 
-call dein#add('wavded/vim-stylus') "{{{
-  autocmd BufNewFile,BufRead *.styl set filetype=stylus
-"}}}
-
+call dein#add('wakatime/vim-wakatime')
 
 "{{{ dein.vim post-config
 call dein#end()
@@ -307,6 +312,7 @@ if has("gui_running")
   hi vertsplit gui=none guibg=grey22 
 
   if has("gui_mac") || has("gui_macvim")
+    set guifont=Source\ Code\ Pro\ Light:h13
     " set guifont=Menlo:h13
     " set guifont=Skyhook\ Mono:h16
     " set guifont=M+\ 1m\ regular:h14
@@ -315,7 +321,6 @@ if has("gui_running")
     " set guifont=Monaco:h13
     " set guifont=Envy\ Code\ R\ for\ Powerline:h13
     " set guifont=Inconsolata:h13
-    set guifont=Source\ Code\ Pro\ Light:h13
     " set guifont=Pragmata\ TT:h14
     " set guifont=Dark\ Courier:h16
     " set guifont=Cousine:h14
@@ -334,8 +339,9 @@ if has("gui_running")
   endif
 else
   "dont load csapprox if there is no gui support - silences an annoying warning
+  set t_Co=256
   let g:CSApprox_loaded = 1
-  colorscheme desert
+  colorscheme desert256
 endif
 
 set fillchars-=vert:\|
